@@ -18,8 +18,7 @@ caddy-formula
    :scale: 100%
    :target: https://github.com/pre-commit/pre-commit
 
-A SaltStack formula that is empty. It has dummy content to help with a quick
-start on a new formula and it serves as a style guide.
+A SaltStack formula to install and configure a [caddy webserver](https://caddyserver.com/)
 
 .. contents:: **Table of Contents**
    :depth: 1
@@ -128,28 +127,6 @@ dependency on ``caddy.service.clean`` via include list.
 
 This state will remove the caddy package and has a depency on
 ``caddy.config.clean`` via include list.
-
-``caddy.subcomponent``
-^^^^^^^^^^^^^^^^^^^^^^
-
-*Meta-state (This is a state that includes other states)*.
-
-This state installs a subcomponent configuration file before
-configuring and starting the caddy service.
-
-``caddy.subcomponent.config``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This state will configure the caddy subcomponent and has a
-dependency on ``caddy.config`` via include list.
-
-``caddy.subcomponent.config.clean``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This state will remove the configuration of the caddy subcomponent
-and reload the caddy service by a dependency on
-``caddy.service.running`` via include list and ``watch_in``
-requisite.
 
 Testing
 -------

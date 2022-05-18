@@ -3,38 +3,63 @@
 control 'caddy.config.file' do
   title 'Verify the configuration file'
 
-  describe file('/etc/template-formula.conf') do
+  describe file('/etc/caddy/Caddyfile') do
     it { should be_file }
     it { should be_owned_by 'root' }
     it { should be_grouped_into 'root' }
     its('mode') { should cmp '0644' }
     its('content') do
       should include(
-        'This is another example file from SaltStack template-formula.'
+        'File managed by Salt at <salt://caddy/files/default/Caddyfile.tmpl.jinja>'
       )
     end
-    its('content') { should include '"added_in_pillar": "pillar_value"' }
-    its('content') { should include '"added_in_defaults": "defaults_value"' }
-    its('content') { should include '"added_in_lookup": "lookup_value"' }
-    its('content') { should include '"config": "/etc/template-formula.conf"' }
-    its('content') { should include '"lookup": {"added_in_lookup": "lookup_value",' }
-    its('content') { should include '"pkg": {"name": "' }
-    its('content') { should include '"service": {"name": "' }
     its('content') do
       # rubocop:disable Lint/RedundantCopDisableDirective
       # rubocop:disable Layout/LineLength
-      should include(
-        '"tofs": {"files_switch": ["any/path/can/be/used/here", "id", '\
-        '"roles", "osfinger", "os", "os_family"], "source_files": '\
-        '{"caddy-config-file-file-managed": ["example.tmpl.jinja"], '\
-        '"caddy-subcomponent-config-file-file-managed": '\
-        '["subcomponent-example.tmpl.jinja"]}'
+      should match(
+        "{\n"\
+        "\temail webmaster@example.net\n"\
+        "\tauto_https off\n"\
+        "\tlog main {\n"\
+        "\t\tlevel WARN\n"\
+        "\t\toutput file /var/log/caddy/caddy-general.log\n"\
+        "\t}\n"\
+        '}'
+      )
+    end
+    its('content') do
+      should match(
+        "localhost {\n"\
+        "\troot \\* /usr/share/caddy\n"\
+        "\tlog {\n"\
+        "\t\tlevel WARN\n"\
+        "\t\toutput file /var/log/caddy/localhost.log\n"\
+        "\t}\n"\
+        '}'
+      )
+    end
+    its('content') do
+      should match(
+        "example.com:80 {\n"\
+        "\tredir https://example.net\n"\
+        "}"
+      )
+    end
+    its('content') do
+      should match(
+        "example.net {\n"\
+        "\thandle_path /\\* {\n"\
+        "\t\troot \\* /var/www/example.net/\n"\
+        "\t\tfile_server\n"\
+        "\t}\n"\
+        "\tlog {\n"\
+        "\t\tlevel WARN\n"\
+        "\t\toutput file /var/log/caddy/example.net.log\n"\
+        "\t}\n"\
+        "}"
       )
       # rubocop:enable Layout/LineLength
       # rubocop:enable Lint/RedundantCopDisableDirective
     end
-    its('content') { should include '"arch": "amd64"' }
-    its('content') { should include '"winner": "pillar"}' }
-    its('content') { should include 'winner of the merge: pillar' }
   end
 end

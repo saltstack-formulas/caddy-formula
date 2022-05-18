@@ -12,8 +12,8 @@ include:
 
 caddy-config-file-file-managed:
   file.managed:
-    - name: {{ caddy.config }}
-    - source: {{ files_switch(['example.tmpl'],
+    - name: {{ caddy.config.dir }}/{{ caddy.config.file }}
+    - source: {{ files_switch([caddy.config.file ~ '.tmpl.jinja'],
                               lookup='caddy-config-file-file-managed'
                  )
               }}

@@ -4,15 +4,23 @@
 # Set default values.
 ---
 values:
+  version: '2.5.1'
+  rootgroup: root
+  user: caddy
+  group: caddy
   pkg:
     name: caddy
-  rootgroup: root
-  config: '/etc/caddy'
+  config:
+    dir: /etc/caddy
+    file: Caddyfile
+    validate: true
+    format: true
+    global_options:
+      - email: webmaster@{{ grains.fqdn | lower }}
+      - log main:
+        - level: WARN
+        - output: file /var/log/caddy/caddy-general.log
   service:
     name: caddy
-  subcomponent:
-    config: '/etc/caddy-subcomponent-formula.conf'
-  # Just here for testing
-  added_in_defaults: defaults_value
-  winner: defaults
-...
+  xcaddy: {}
+  servers: {}

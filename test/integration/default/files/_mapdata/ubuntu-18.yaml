@@ -26,8 +26,8 @@ values:
   rootgroup: root
   service:
     name: systemd-journald
-  subcomponent:
-    config: /etc/caddy-subcomponent-formula.conf
+  xcaddy:
+    config: /etc/caddy-xcaddy-formula.conf
   tofs:
     files_switch:
     - any/path/can/be/used/here
@@ -39,6 +39,6 @@ values:
     source_files:
       caddy-config-file-file-managed:
       - example.tmpl.jinja
-      caddy-subcomponent-config-file-file-managed:
-      - subcomponent-example.tmpl.jinja
+      caddy-xcaddy-config-file-file-managed:
+      - xcaddy-example.tmpl.jinja
   winner: pillar

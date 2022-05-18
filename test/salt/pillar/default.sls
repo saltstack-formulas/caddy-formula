@@ -1,57 +1,41 @@
 # -*- coding: utf-8 -*-
 # vim: ft=yaml
+#
+# Set default values.
 ---
 caddy:
-  lookup:
-    master: template-master
-    # Just for testing purposes
-    winner: lookup
-    added_in_lookup: lookup_value
-
-  # Using bash package and udev service as an example. This allows us to
-  # test the template formula itself. You should set these parameters to
-  # examples that make sense in the contexto of the formula you're writing.
+  version: '2.5.1'
+  rootgroup: root
+  user: caddy
+  group: caddy
   pkg:
-    name: bash
+    name: caddy
+  config:
+    dir: /etc/caddy
+    file: Caddyfile
+    validate: true
+    format: true
+    global_options:
+      - email: webmaster@example.net
+      - auto_https: 'off'
+      - log main:
+        - level: WARN
+        - output: file /var/log/caddy/caddy-general.log
   service:
-    name: systemd-journald
-  config: /etc/template-formula.conf
-
-  tofs:
-    # The files_switch key serves as a selector for alternative
-    # directories under the formula files directory. See TOFS pattern
-    # doc for more info.
-    # Note: Any value not evaluated by `config.get` will be used literally.
-    # This can be used to set custom paths, as many levels deep as required.
-    files_switch:
-      - any/path/can/be/used/here
-      - id
-      - roles
-      - osfinger
-      - os
-      - os_family
-    # All aspects of path/file resolution are customisable using the options below.
-    # This is unnecessary in most cases; there are sensible defaults.
-    # Default path: salt://< path_prefix >/< dirs.files >/< dirs.default >
-    #         I.e.: salt://caddy/files/default
-    # path_prefix: template_alt
-    # dirs:
-    #   files: files_alt
-    #   default: default_alt
-    # The entries under `source_files` are prepended to the default source files
-    # given for the state
-    # source_files:
-    #   caddy-config-file-file-managed:
-    #     - 'example_alt.tmpl'
-    #     - 'example_alt.tmpl.jinja'
-
-    # For testing purposes
-    source_files:
-      caddy-config-file-file-managed:
-        - 'example.tmpl.jinja'
-      caddy-subcomponent-config-file-file-managed:
-        - 'subcomponent-example.tmpl.jinja'
-
-  # Just for testing purposes
-  winner: pillar
-  added_in_pillar: pillar_value
+    name: caddy
+  xcaddy: {}
+  servers:
+    - localhost:
+      - root: '* /usr/share/caddy'
+      - log:
+        - level: WARN
+        - output: file /var/log/caddy/localhost.log
+    - 'example.com:80':
+        - redir: 'https://example.net'
+    - example.net:
+      - 'handle_path /*':
+          - root: '* /var/www/example.net/'
+          - file_server
+      - log:
+        - level: WARN
+        - output: file /var/log/caddy/example.net.log
