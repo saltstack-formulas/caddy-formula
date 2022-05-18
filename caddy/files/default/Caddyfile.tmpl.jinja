@@ -2,7 +2,7 @@
 {%- macro server_config(values, key = '', ind = 0, lb = '\n', operator = ' ') -%}
     {%- for value in values -%}
         {%- if value is number or value is string -%}
-{{ '\t' * ind }}{{ key }}{{ operator if key else ''}}{{ value }}{{ lb }}
+{{ '\t' * ind }}{{ key }}{{ operator if key else '' }}{{ value }}{{ lb }}
         {%- elif value is mapping -%}
             {%- for k, v in value.items() -%}
                 {%- if v is number or v is string -%}
