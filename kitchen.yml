@@ -13,7 +13,7 @@ provisioner:
   log_level: debug
   salt_install: none
   require_chef: false
-  formula: TEMPLATE
+  formula: caddy
   salt_copy_filter:
     - .kitchen
     - .git
@@ -310,8 +310,8 @@ suites:
       state_top:
         base:
           '*':
-            - TEMPLATE._mapdata
-            - TEMPLATE
+            - caddy._mapdata
+            - caddy
     verifier:
       inspec_tests:
         - path: test/integration/default
