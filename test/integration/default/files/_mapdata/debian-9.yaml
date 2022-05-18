@@ -2,15 +2,18 @@
 # Debian-9
 ---
 values:
-  added_in_defaults: defaults_value
-  added_in_lookup: lookup_value
-  added_in_pillar: pillar_value
-  arch: amd64
-  config: /etc/template-formula.conf
-  lookup:
-    added_in_lookup: lookup_value
-    master: template-master
-    winner: lookup
+  config:
+    dir: /etc/caddy
+    file: Caddyfile
+    format: true
+    global_options:
+    - email: webmaster@example.net
+    - auto_https: 'off'
+    - log main:
+      - level: WARN
+      - output: file /var/log/caddy/caddy-general.log
+    validate: true
+  group: caddy
   map_jinja:
     sources:
     - Y:G@osarch
@@ -20,25 +23,26 @@ values:
     - C@caddy:lookup
     - C@caddy
     - Y:G@id
-  master: template-master
   pkg:
-    name: bash
+    name: caddy
   rootgroup: root
+  servers:
+  - localhost:
+    - root: '* /usr/share/caddy'
+    - log:
+      - level: WARN
+      - output: file /var/log/caddy/localhost.log
+  - example.com:80:
+    - redir: https://example.net
+  - example.net:
+    - handle_path /*:
+      - root: '* /var/www/example.net/'
+      - file_server
+    - log:
+      - level: WARN
+      - output: file /var/log/caddy/example.net.log
   service:
-    name: systemd-journald
-  xcaddy:
-    config: /etc/caddy-xcaddy-formula.conf
-  tofs:
-    files_switch:
-    - any/path/can/be/used/here
-    - id
-    - roles
-    - osfinger
-    - os
-    - os_family
-    source_files:
-      caddy-config-file-file-managed:
-      - example.tmpl.jinja
-      caddy-xcaddy-config-file-file-managed:
-      - xcaddy-example.tmpl.jinja
-  winner: pillar
+    name: caddy
+  user: caddy
+  version: 2.5.1
+  xcaddy: {}

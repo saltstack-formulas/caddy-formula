@@ -18,8 +18,8 @@ values:
     global_options:
       - email: webmaster@{{ grains.fqdn | lower }}
       - log main:
-        - level: WARN
-        - output: file /var/log/caddy/caddy-general.log
+          - level: WARN
+          - output: file /var/log/caddy/caddy-general.log
   service:
     name: caddy
   xcaddy: {}

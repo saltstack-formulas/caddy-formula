@@ -42,7 +42,7 @@ control 'caddy.config.file' do
       should match(
         "example.com:80 {\n"\
         "\tredir https://example.net\n"\
-        "}"
+        '}'
       )
     end
     its('content') do
@@ -56,7 +56,7 @@ control 'caddy.config.file' do
         "\t\tlevel WARN\n"\
         "\t\toutput file /var/log/caddy/example.net.log\n"\
         "\t}\n"\
-        "}"
+        '}'
       )
       # rubocop:enable Layout/LineLength
       # rubocop:enable Lint/RedundantCopDisableDirective

@@ -1,0 +1,35 @@
+{%- set ind_increment = 1 -%}
+{%- macro server_config(values, key = '', ind = 0, lb = '\n', operator = ' ') -%}
+    {%- for value in values -%}
+        {%- if value is number or value is string -%}
+{{ '\t' * ind }}{{ key }}{{ operator if key else '' }}{{ value }}{{ lb }}
+        {%- elif value is mapping -%}
+            {%- for k, v in value.items() -%}
+                {%- if v is number or v is string -%}
+{{ server_config([v], k, ind) }}
+                {%- elif v|length() > 0 and (v[0] is number or v[0] is string) -%}
+{{ server_config(v, k, ind) }}
+                {%- else -%}
+{{ '\t' * ind }}{{ k }}{{ operator }}{{ '{' }}
+{{ server_config(v, ind = ind + ind_increment) }}
+{{- '\t' * ind }}{{ '}' }}{{ lb }}
+                {%- endif -%}
+            {%- endfor -%}
+        {%- elif value is iterable -%}
+{{ server_config(value, key, ind + ind_increment) }}
+        {%- endif -%}
+    {%- endfor -%}
+{%- endmacro -%}
+########################################################################
+# File managed by Salt at <{{ source }}>.
+# Your changes will be overwritten.
+########################################################################
+
+# Global configuration
+# https://caddyserver.com/docs/caddyfile/options
+{
+{{ server_config(caddy['config']['global_options'], ind = 1) -}}
+}
+# Vhosts
+# https://caddyserver.com/docs/caddyfile
+{{ server_config(caddy['servers']) }}
