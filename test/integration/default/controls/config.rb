@@ -13,9 +13,9 @@ control 'caddy.config.file' do
         'File managed by Salt at <salt://caddy/files/default/Caddyfile.tmpl.jinja>'
       )
     end
+    # rubocop:disable Lint/RedundantCopDisableDirective
+    # rubocop:disable Layout/LineLength
     its('content') do
-      # rubocop:disable Lint/RedundantCopDisableDirective
-      # rubocop:disable Layout/LineLength
       should match(
         "{\n"\
         "\temail webmaster@example.net\n"\
@@ -48,6 +48,7 @@ control 'caddy.config.file' do
     its('content') do
       should match(
         "example.net {\n"\
+        "\tencode gzip\n"\
         "\thandle_path /\\* {\n"\
         "\t\troot \\* /var/www/example.net/\n"\
         "\t\tfile_server\n"\
@@ -58,8 +59,36 @@ control 'caddy.config.file' do
         "\t}\n"\
         '}'
       )
-      # rubocop:enable Layout/LineLength
-      # rubocop:enable Lint/RedundantCopDisableDirective
     end
+    its('content') do
+      should match(
+        "multi.level.example.net {\n"\
+        "\tencode gzip\n"\
+        "\troute /path/\\* {\n"\
+        "\t\tbasicauth \\* {\n"\
+        "\t\t\tuser JDJhJDE0JFJxLjBBTXhVTHF2VHBoVU54LjFXQnVEQkZYdFhlVmUzSmxRL3VrQVcwS05IQnVIS2FBREIy\n"\
+        "\t\t}\n"\
+        "\t\troot \\* /var/www/html/\n"\
+        "\t\ttry_files {path} /path/to/index.cgi\n"\
+        "\t\t@cgi path \\*.cgi\n"\
+        "\t\thandle /path/to/index.cgi {\n"\
+        "\t\t\treverse_proxy @cgi unix//run/fcgiwrap.socket {\n"\
+        "\t\t\t\ttransport fastcgi {\n"\
+        "\t\t\t\t\tresolve_root_symlink\n"\
+        "\t\t\t\t\tsplit .cgi\n"\
+        "\t\t\t\t}\n"\
+        "\t\t\t}\n"\
+        "\t\t}\n"\
+        "\t\tfile_server\n"\
+        "\t}\n"\
+        "\tlog {\n"\
+        "\t\tlevel WARN\n"\
+        "\t\toutput file /var/log/caddy/multi.level.example.net.log\n"\
+        "\t}\n"\
+        '}'
+      )
+    end
+    # rubocop:enable Layout/LineLength
+    # rubocop:enable Lint/RedundantCopDisableDirective
   end
 end

@@ -7,16 +7,14 @@
             {%- for k, v in value.items() -%}
                 {%- if v is number or v is string -%}
 {{ server_config([v], k, ind) }}
-                {%- elif v|length() > 0 and (v[0] is number or v[0] is string) -%}
-{{ server_config(v, k, ind) }}
-                {%- else -%}
+                {%- elif v is iterable and v is not string -%}
 {{ '\t' * ind }}{{ k }}{{ operator }}{{ '{' }}
 {{ server_config(v, ind = ind + ind_increment) }}
 {{- '\t' * ind }}{{ '}' }}{{ lb }}
+                {%- elif value is iterable and value is not string -%}
+{{ server_config(value, key, ind + ind_increment) }}
                 {%- endif -%}
             {%- endfor -%}
-        {%- elif value is iterable -%}
-{{ server_config(value, key, ind + ind_increment) }}
         {%- endif -%}
     {%- endfor -%}
 {%- endmacro -%}
