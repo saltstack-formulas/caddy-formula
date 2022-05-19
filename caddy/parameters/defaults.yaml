@@ -13,8 +13,6 @@ values:
   config:
     dir: /etc/caddy
     file: Caddyfile
-    validate: true
-    format: true
     global_options:
       - email: webmaster@{{ grains.fqdn | lower }}
       - log main:
@@ -22,5 +20,4 @@ values:
           - output: file /var/log/caddy/caddy-general.log
   service:
     name: caddy
-  xcaddy: {}
   servers: {}
