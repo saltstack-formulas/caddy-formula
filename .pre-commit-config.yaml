@@ -61,7 +61,5 @@ repos:
             (?x)^(
                 docs/CHANGELOG.rst|
                 docs/TOFS_pattern.rst|
-                docs/CONTRIBUTING_DOCS.rst|
-                docs/index.rst|
             )$
         additional_dependencies: [pygments==2.9.0]
